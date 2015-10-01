@@ -13,7 +13,7 @@ import kfs.kfscrm.domain.KfsContact;
  */
 public interface PhoneService {
 
-    void incomingSave(SmsIncoming sms);
+    void incomingSave(SmsIncoming sms, String statusName);
 
     void outgoingSave(SmsOutgoing sms);
     SmsOutgoing outgoingSmsPop(String userId);
@@ -27,7 +27,7 @@ public interface PhoneService {
     List<SmsTemplate> templateLoad();
     void templateSend(SmsTemplate template, KfsContact contact, String rcpt);
     
-    void callSave(PhoneCall callOutgoing);
+    void callSave(PhoneCall callOutgoing, String statusName);
     
     List<PhoneCall> callLoadNotDone();
     List<PhoneCall> callLoad(KfsContact cont);

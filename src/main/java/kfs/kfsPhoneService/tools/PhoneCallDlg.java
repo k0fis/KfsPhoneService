@@ -49,7 +49,7 @@ public class PhoneCallDlg extends SimpleDlgLockTemplate<PhoneCall, PhoneCallLock
 
     @Override
     protected void kfsSave(PhoneCall data) {
-        phoneService.callSave(data);
+        phoneService.callSave(data, null);
     }
 
     @Override

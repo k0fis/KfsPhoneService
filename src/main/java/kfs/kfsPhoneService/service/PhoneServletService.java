@@ -125,9 +125,9 @@ public interface PhoneServletService {
     boolean isWorkingHoursInUse();
     int getWorkingHoursBegin();
     int getWorkingHoursEnd();
-    Object smsIncoming(String userId, smsIncoming smsIn);
-    Object callMissed(String userId, call call);
-    Object callIncoming(String userId, call call);
+    Object smsIncoming(String userId, smsIncoming smsIn, String statusName);
+    Object callMissed(String userId, call call, String statusName);
+    Object callIncoming(String userId, call call, String statusName);
     Object callOutgoing(String userId, call call);
     smsOutgoing smsOutgoingSending(String userId);
     Object smsOutgoingFail(String userId, smsFailOut smsOut);

@@ -17,7 +17,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @author pavedrim
  */
-public class sms extends HttpServlet {
+public abstract class sms extends HttpServlet {
 
     private PhoneServletService smsService;
 
@@ -49,6 +49,10 @@ public class sms extends HttpServlet {
         out(resp, o);
     }
 
+    protected abstract String getSmsIcomingStatusName();
+    protected abstract String getCallIcomingStatusName();
+    protected abstract String getCallMissedStatusName();
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -61,7 +65,7 @@ public class sms extends HttpServlet {
                     smsCommitOut.class));
         } else if (smsService.getCmdSmsIncoming().equals(cmd)) {
             o = smsService.smsIncoming(userId, gs.fromJson(req.getParameter(smsService.getVarName()),
-                    smsIncoming.class));
+                    smsIncoming.class), getSmsIcomingStatusName());
         } else if (smsService.getCmdSmsOutgoing().equals(cmd)) {
             o = smsService.smsOutgoingSending(userId);
         } else if (smsService.getCmdSmsFail().equals(cmd)) {
@@ -71,10 +75,10 @@ public class sms extends HttpServlet {
             doLogout(userId, req, resp);
         } else if (smsService.getCmdCallMissed().equals(cmd)) {
             o = smsService.callMissed(userId, gs.fromJson(req.getParameter(smsService.getVarName()),
-                    call.class));
+                    call.class), getCallMissedStatusName());
         } else if (smsService.getCmdCallIncoming().equals(cmd)) {
             o = smsService.callIncoming(userId, gs.fromJson(req.getParameter(smsService.getVarName()),
-                    call.class));
+                    call.class), getCallIcomingStatusName());
         } else if (smsService.getCmdCallOutgoing().equals(cmd)) {
             o = smsService.callOutgoing(userId, gs.fromJson(req.getParameter(smsService.getVarName()),
                     call.class));

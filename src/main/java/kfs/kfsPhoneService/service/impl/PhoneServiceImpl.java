@@ -39,8 +39,8 @@ public class PhoneServiceImpl implements PhoneService {
     PhoneCallLockService phoneCallLockService;
 
     @Override
-    public void incomingSave(SmsIncoming sms) {
-        sms.setContact(updateContact(sms.getContact(), sms.getFromNumber(), sms.getIncomingUserId()));
+    public void incomingSave(SmsIncoming sms, String statusName) {
+        sms.setContact(updateContact(sms.getContact(), sms.getFromNumber(), sms.getIncomingUserId(), statusName));
         if (sms.getId() == null) {
             smsIncomingDao.insert(sms);
         } else {
@@ -63,8 +63,8 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public void callSave(PhoneCall call) {
-        call.setContact(updateContact(call.getContact(), call.getFromNumber(), call.getUserId()));
+    public void callSave(PhoneCall call, String statusName) {
+        call.setContact(updateContact(call.getContact(), call.getFromNumber(), call.getUserId(), statusName));
         if (call.getId() == null) {
             phoneCallDao.insert(call);
         } else {
@@ -72,13 +72,16 @@ public class PhoneServiceImpl implements PhoneService {
         }
     }
 
-    KfsContact updateContact(KfsContact cont, String number, String user) {
+    KfsContact updateContact(KfsContact cont, String number, String user, String statusName) {
         if (cont == null) {
             cont = crmService.contactFindByPhone(number, user);
         }
         cont.setLastUpdate(new Timestamp(new Date().getTime()));
         cont.setLastUpdateBy(user);
         cont.setLastPhone(number);
+        if (statusName != null) {
+            cont.setStatus(statusName);
+        }
         crmService.contactSave(cont, user);
         return cont;
     }
@@ -186,12 +189,12 @@ public class PhoneServiceImpl implements PhoneService {
         templateDao.insert(t);
         return t;
     }
-    
+
     @Override
-    public void templateDelete(SmsTemplate data){
+    public void templateDelete(SmsTemplate data) {
         templateDao.delete(data);
     }
-    
+
     @Override
     public void templateSave(SmsTemplate template) {
         templateDao.save(template);

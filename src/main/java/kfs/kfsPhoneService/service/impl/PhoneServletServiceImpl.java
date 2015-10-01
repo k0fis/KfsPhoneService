@@ -212,7 +212,7 @@ public class PhoneServletServiceImpl implements PhoneServletService {
     }
 
     @Override
-    public Object smsIncoming(String userId, smsIncoming data) {
+    public Object smsIncoming(String userId, smsIncoming data, String statusName) {
         if (data == null) {
             log(userId,
                     "SMSS.doIncoming - input data is empty");
@@ -229,13 +229,13 @@ public class PhoneServletServiceImpl implements PhoneServletService {
             smsIn.setSmsTime(new Timestamp(new Date().getTime()));
             log(userId, "SMSS.doIncoming - Cannot parse incoming date: " + data.time);
         }
-        phoneService.incomingSave(smsIn);
+        phoneService.incomingSave(smsIn, statusName);
         return "danke";
 
     }
 
     @Override
-    public Object callMissed(String userId, call mc) {
+    public Object callMissed(String userId, call mc, String statusName) {
         log(userId,
                 "Missed Call ts: " + mc.unxTimeMilisec + ", msisdn: " + mc.msisdn);
         PhoneCall co = new PhoneCall();
@@ -244,12 +244,12 @@ public class PhoneServletServiceImpl implements PhoneServletService {
         co.setCallDate(new Timestamp(mc.unxTimeMilisec));
         co.setNumber(mc.msisdn);
         co.setType(PhoneCallType.missed);
-        phoneService.callSave(co);
+        phoneService.callSave(co, statusName);
         return "danke";
     }
 
     @Override
-    public Object callIncoming(String userId, call mc) {
+    public Object callIncoming(String userId, call mc, String statusName) {
         log(userId,
                 "Incoming Call ts: " + mc.unxTimeMilisec + ", msisdn: " + mc.msisdn
                 + " duration: " + mc.durationMilisec);
@@ -260,7 +260,7 @@ public class PhoneServletServiceImpl implements PhoneServletService {
         co.setCallDate(new Timestamp(mc.unxTimeMilisec));
         co.setNumber(mc.msisdn);
         co.setType(PhoneCallType.incoming);
-        phoneService.callSave(co);
+        phoneService.callSave(co,statusName);
         return "danke";
     }
 
@@ -275,7 +275,7 @@ public class PhoneServletServiceImpl implements PhoneServletService {
         co.setCallDate(new Timestamp(mc.unxTimeMilisec));
         co.setNumber(mc.msisdn);
         co.setType(PhoneCallType.outgoing);
-        phoneService.callSave(co);
+        phoneService.callSave(co, null);
         return "danke";
     }
 
